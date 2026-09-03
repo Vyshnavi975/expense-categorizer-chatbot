@@ -254,7 +254,7 @@ class ExpenseChat:
 
         # Fallback: general total, or nudge for a supported pattern.
         return (
-            "I'm running in demo mode (no ANTHROPIC_API_KEY / OPENAI_API_KEY set, "
+            "I'm running in demo mode (no OPENAI_API_KEY / ANTHROPIC_API_KEY set, "
             "or --llm not passed), so I can only answer a fixed set of question "
             "patterns. Try things like: 'how much did I spend on dining last month', "
             "'what's my biggest category', 'total spending', 'how much did I spend "

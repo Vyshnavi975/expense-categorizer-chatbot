@@ -6,10 +6,11 @@ Usage:
 
     csv_path       Path to a transactions CSV with columns:
                     date, description, amount (default: sample_data/transactions.csv)
-    --llm          Use an LLM (Anthropic or OpenAI, whichever API key is set)
-                    for categorization and for answering free-form chat
-                    questions. Falls back to the rule-based categorizer and
-                    demo-mode pattern matching if no key/library is available.
+    --llm          Use an LLM (OpenAI by default, or Anthropic as a fallback
+                    if ANTHROPIC_API_KEY is set instead) for categorization
+                    and for answering free-form chat questions. Falls back to
+                    the rule-based categorizer and demo-mode pattern matching
+                    if no key/library is available.
     --ask QUESTION Answer a single question non-interactively and exit
                     (useful for scripting/demos), instead of starting the
                     interactive chat loop.
@@ -49,7 +50,7 @@ def categorize(df: pd.DataFrame, use_llm: bool) -> pd.DataFrame:
         if provider is None:
             print(
                 "[warning] --llm was passed but no usable API key/library was found "
-                "(checked ANTHROPIC_API_KEY and OPENAI_API_KEY). Falling back to the "
+                "(checked OPENAI_API_KEY and ANTHROPIC_API_KEY). Falling back to the "
                 "rule-based categorizer.\n",
                 file=sys.stderr,
             )
