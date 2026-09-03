@@ -6,9 +6,9 @@ Entertainment, Shopping, Other), and lets you ask natural-language questions
 about your spending from a simple chat interface.
 
 Categorization works out of the box with **no API key required**, using a
-from-scratch keyword/rule-based matcher. If you set `OPENAI_API_KEY` (or an
-alternative provider key, see Setup), you can opt into an `--llm` flag for
-smarter, context-aware categorization and much more flexible free-form chat.
+from-scratch keyword/rule-based matcher. If you set `OPENAI_API_KEY` (see
+Setup), you can opt into an `--llm` flag for smarter, context-aware
+categorization and much more flexible free-form chat.
 
 ## Features
 
@@ -18,10 +18,9 @@ smarter, context-aware categorization and much more flexible free-form chat.
   to extend.
 - **Optional LLM mode (`--llm`).** When `OPENAI_API_KEY` is set,
   categorization and chat answers can be handed off to GPT (via the `openai`
-  package) — this is the default provider. An alternative provider is also
-  supported (see Setup). If no key/library is available, `--llm` prints a
-  warning and cleanly falls back to the rule-based / demo-mode paths — the
-  app never crashes for lack of a key.
+  package). If no key/library is available, `--llm` prints a warning and
+  cleanly falls back to the rule-based / demo-mode paths — the app never
+  crashes for lack of a key.
 - **Demo-mode chat (no API key needed).** A lightweight pattern matcher
   (`expenses/chat.py`) recognizes a useful set of common questions: totals by
   category, totals by month, "last month" / "this month", top/biggest
@@ -44,7 +43,7 @@ expense-categorizer-chatbot/
 │   ├── __init__.py
 │   ├── categorizer.py   # rule-based keyword categorizer (primary path)
 │   ├── chat.py          # aggregation logic + demo-mode question answering
-│   ├── llm.py           # optional OpenAI-backed categorization & chat (alt. provider supported)
+│   ├── llm.py           # optional OpenAI-backed categorization & chat
 │   └── cli.py           # argparse entry point / interactive chat loop
 ├── sample_data/
 │   └── transactions.csv # ~53 example transactions across 3 months
@@ -75,10 +74,6 @@ To use `--llm`, set:
 ```bash
 export OPENAI_API_KEY="sk-..."
 ```
-
-Anthropic is also supported as an alternative provider — set
-`ANTHROPIC_API_KEY` instead (and `pip install anthropic`) if you'd rather use
-that.
 
 ## Usage
 

@@ -1,13 +1,9 @@
 # Core dependency (required)
 pandas>=2.0.0
 
-# Optional: only needed if you use --llm with OPENAI_API_KEY set (default).
+# Optional: only needed if you use --llm with OPENAI_API_KEY set.
 # Uncomment to install:
 # openai>=1.30.0
-
-# Optional alternative: only needed if you use --llm with ANTHROPIC_API_KEY
-# set instead. Uncomment to install:
-# anthropic>=0.30.0
 
 # Testing (optional, for running the test suite)
 pytest>=7.0.0

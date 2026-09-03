@@ -2,18 +2,14 @@
 Optional LLM-backed helpers.
 
 These functions are only used when the user passes --llm on the command
-line AND has OPENAI_API_KEY or ANTHROPIC_API_KEY set in their environment.
-Everything here is best-effort: if no key is present, or the API call
-fails for any reason, callers should fall back to the rule-based /
-pattern-matching code paths in categorizer.py and chat.py.
+line AND has OPENAI_API_KEY set in their environment. Everything here is
+best-effort: if no key is present, or the API call fails for any reason,
+callers should fall back to the rule-based / pattern-matching code paths
+in categorizer.py and chat.py.
 
 Supported providers
 --------------------
-- OpenAI (OPENAI_API_KEY set) -- uses the `openai` package. Default provider.
-- Anthropic (ANTHROPIC_API_KEY set) -- uses the `anthropic` package, as a
-  secondary alternative.
-
-If both keys are set, OpenAI is preferred.
+- OpenAI (OPENAI_API_KEY set) -- uses the `openai` package.
 """
 
 from __future__ import annotations
@@ -26,19 +22,12 @@ from .categorizer import all_categories
 
 
 def get_available_provider() -> Optional[str]:
-    """Return 'openai', 'anthropic', or None depending on which API key
-    (and importable client library) is available. OpenAI is the default
-    and is checked first; Anthropic is used as a fallback alternative."""
+    """Return 'openai' or None depending on whether the OpenAI API key
+    (and importable client library) is available."""
     if os.environ.get("OPENAI_API_KEY"):
         try:
             import openai  # noqa: F401
             return "openai"
-        except ImportError:
-            pass
-    if os.environ.get("ANTHROPIC_API_KEY"):
-        try:
-            import anthropic  # noqa: F401
-            return "anthropic"
         except ImportError:
             pass
     return None
@@ -60,34 +49,15 @@ def _call_openai(prompt: str, system: str = "") -> str:
     return response.choices[0].message.content or ""
 
 
-def _call_anthropic(prompt: str, system: str = "") -> str:
-    # Secondary alternative provider; used only when OPENAI_API_KEY isn't set.
-    import anthropic
-
-    client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
-    response = client.messages.create(
-        model="claude-3-5-haiku-20241022",
-        max_tokens=1024,
-        system=system,
-        messages=[{"role": "user", "content": prompt}],
-    )
-    return "".join(
-        block.text for block in response.content if getattr(block, "type", "") == "text"
-    )
-
-
 def call_llm(prompt: str, system: str = "") -> str:
-    """Call whichever provider is available. Raises RuntimeError if
-    neither OPENAI_API_KEY nor ANTHROPIC_API_KEY is usable."""
+    """Call the OpenAI provider. Raises RuntimeError if OPENAI_API_KEY
+    isn't usable."""
     provider = get_available_provider()
     if provider == "openai":
         return _call_openai(prompt, system)
-    if provider == "anthropic":
-        return _call_anthropic(prompt, system)
     raise RuntimeError(
-        "No usable LLM provider found. Set OPENAI_API_KEY (or "
-        "ANTHROPIC_API_KEY as an alternative) and install the matching "
-        "client library (openai or anthropic)."
+        "No usable LLM provider found. Set OPENAI_API_KEY and install the "
+        "openai client library."
     )
 
 
